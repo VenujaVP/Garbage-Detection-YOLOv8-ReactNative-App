@@ -8,11 +8,6 @@ const Home = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Top Bar */}
-      <View style={styles.topBar}>
-        <Text style={styles.topBarText}>Home</Text>
-      </View>
-
       {/* Main Content */}
       <View style={styles.mainContent}>
         <Text style={styles.title}>Welcome to Garbage Detection App</Text>
@@ -53,18 +48,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f8f8',
-  },
-  topBar: {
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#007BFF',
-    elevation: 5, // Add a slight shadow to the top bar
-  },
-  topBarText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
   },
   mainContent: {
     flex: 1,
