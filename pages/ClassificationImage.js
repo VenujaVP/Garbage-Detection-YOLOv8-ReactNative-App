@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import axios from "axios";
 
 const ClassificationImage = () => {
   const [image, setImage] = useState(null); // State for uploaded image
@@ -37,8 +38,8 @@ const ClassificationImage = () => {
     }
   };
 
-  // Simulate garbage detection (no model logic)
-  const detectGarbage = () => {
+  // Send image to backend for prediction
+  const detectGarbage = async () => {
     if (!image) {
       Alert.alert("No image", "Please upload an image first.");
       return;
@@ -46,11 +47,37 @@ const ClassificationImage = () => {
 
     setLoading(true);
 
-    // Simulate a delay for processing
-    setTimeout(() => {
-      setResult("Organic Waste"); // Example result
+    // Convert image URI to a file object
+    const formData = new FormData();
+    formData.append("file", {
+      uri: image,
+      name: "photo.jpg",
+      type: "image/jpeg",
+    });
+
+    try {
+      const response = await axios.post("http://<your-backend-ip>:5000/predict", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const { detections, output_image } = response.data;
+
+      // Convert hex string back to image
+      const outputImageBytes = new Uint8Array(Buffer.from(output_image, "hex"));
+      const outputImageUri = `data:image/jpeg;base64,${Buffer.from(outputImageBytes).toString("base64")}`;
+
+      setResult({
+        detections,
+        outputImageUri,
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      Alert.alert("Error", "Failed to process the image.");
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -79,13 +106,20 @@ const ClassificationImage = () => {
       {/* Result Section */}
       {result !== null && (
         <View style={styles.resultSection}>
-          <Text style={styles.resultText}>Detection Result: {result}</Text>
+          <Text style={styles.resultText}>Detection Results:</Text>
+          {result.detections.map((detection, index) => (
+            <Text key={index} style={styles.resultText}>
+              {detection.class} (Confidence: {detection.confidence.toFixed(2)})
+            </Text>
+          ))}
+          <Image source={{ uri: result.outputImageUri }} style={styles.outputImage} />
         </View>
       )}
     </View>
   );
 };
 
+// Styles remain the same as before
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -139,6 +173,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "#00796B", // Dark teal color
+  },
+  outputImage: {
+    width: "100%",
+    height: 300,
+    borderRadius: 8,
+    marginTop: 10,
   },
 });
 
