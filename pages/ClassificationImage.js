@@ -61,6 +61,7 @@ const ClassificationImage = () => {
           title={loading ? "Processing..." : "Detect Garbage"}
           onPress={detectGarbage}
           disabled={loading}
+          color="#00796B" // Dark teal color for the button
         />
       </View>
 
@@ -78,13 +79,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#E0F7FA", // Light blue background
+    paddingTop: 20,
   },
   imageArea: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#ffffff", // White background for image area
-    margin: 10,
+    margin: 20,
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 8,
     padding: 15,
-    margin: 10,
+    margin: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.22,
