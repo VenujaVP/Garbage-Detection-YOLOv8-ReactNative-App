@@ -1,3 +1,5 @@
+//npm install @react-navigation/native @react-navigation/stack react-native-screens react-native-safe-area-context
+
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
