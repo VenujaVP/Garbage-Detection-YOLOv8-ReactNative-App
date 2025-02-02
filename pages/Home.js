@@ -27,6 +27,7 @@ const Home = () => {
             <Button
               title="Start Real-Time Camera Detection"
               onPress={() => navigation.navigate('RealTimeCamera')}
+              color="#00796B"
             />
           </View>
 
@@ -39,6 +40,7 @@ const Home = () => {
             <Button
               title="Upload Image for Garbage Detection"
               onPress={() => navigation.navigate('UploadImage')}
+              color="#00796B"
             />
           </View>
         </View>
@@ -50,8 +52,8 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f8f8',
-    marginTop: 30,
+    backgroundColor: '#E0F7FA', // Light blue background
+    paddingTop: 50,
   },
   scrollContainer: {
     flexGrow: 1,
@@ -67,16 +69,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#00796B', // Dark teal color
   },
   introText: {
     fontSize: 18,
     textAlign: 'center',
-    marginBottom: 30,
-    paddingHorizontal: 20,
+    marginBottom: 5,
+    paddingHorizontal: 5,
+    color: '#004D40', // Darker teal color
   },
   sectionContainer: {
     width: '100%',
-    marginVertical: 20,
+    marginVertical: 10,
     backgroundColor: '#ffffff',
     borderRadius: 8,
     padding: 15,
@@ -90,10 +94,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#00796B', // Dark teal color
   },
   sectionDescription: {
     fontSize: 16,
     marginBottom: 15,
+    color: '#004D40', // Darker teal color
   },
 });
 
