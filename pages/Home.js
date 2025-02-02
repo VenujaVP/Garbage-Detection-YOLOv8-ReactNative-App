@@ -1,54 +1,26 @@
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import * as ImagePicker from 'expo-image-picker'; // For image picker to upload image
-
-// Placeholder for camera feed or detection area
-const DetectionSection = ({ onStartDetection, label, description }) => {
-  return (
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>{label}</Text>
-      <Text style={styles.description}>{description}</Text>
-      <TouchableOpacity style={styles.button} onPress={onStartDetection}>
-        <Text style={styles.buttonText}>Start {label}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const ImageUploadSection = ({ onSelectImage, resultImage, resultText }) => {
-  return (
-    <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Upload Image for Classification</Text>
-      <Text style={styles.description}>
-        Upload an image, and the model will classify whether it contains garbage or not.
-      </Text>
-      <TouchableOpacity style={styles.button} onPress={onSelectImage}>
-        <Text style={styles.buttonText}>Select Image</Text>
-      </TouchableOpacity>
-      {resultImage && (
-        <View style={styles.resultContainer}>
-          <Text style={styles.resultText}>{resultText}</Text>
-          <Image source={{ uri: resultImage }} style={styles.resultImage} />
-        </View>
-      )}
-    </View>
-  );
-};
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Camera } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from '@react-navigation/native';  // Navigation if needed
 
 const Home = () => {
-  const [isDetectionActive, setIsDetectionActive] = useState(false);
-  const [resultImage, setResultImage] = useState(null);
-  const [resultText, setResultText] = useState('');
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const [camera, setCamera] = useState(null);
+  const [imageUri, setImageUri] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Handle the start of real-time detection
-  const handleStartDetection = () => {
-    // Add logic to activate real-time detection (camera + model)
-    setIsDetectionActive(true);
-    console.log("Starting real-time garbage detection...");
-  };
+  useEffect(() => {
+    (async () => {
+      // Request permission for camera
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasCameraPermission(status === 'granted');
+      // Request permission for image picker
+      const imagePickerPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    })();
+  }, []);
 
-  // Handle image selection and classification
-  const handleSelectImage = async () => {
+  const handleUploadImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -56,31 +28,57 @@ const Home = () => {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      // Call model to classify the uploaded image
-      console.log("Image selected: ", result.assets[0].uri);
-      setResultImage(result.assets[0].uri);
-      setResultText('Classified as: Garbage Detected'); // Replace with actual model result
+    if (!result.cancelled) {
+      setImageUri(result.uri);
+      // Call model for image classification here
     }
   };
 
+  const handleStartDetection = () => {
+    setLoading(true);
+    // Call model for real-time camera garbage detection here
+  };
+
+  if (hasCameraPermission === null) {
+    return <Text>Requesting camera permission...</Text>;
+  }
+
+  if (hasCameraPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Garbage Detection & Classification</Text>
+      {/* Section 1: Real-Time Camera Garbage Detection */}
+      <View style={styles.section}>
+        <Text style={styles.title}>Real-Time Garbage Detection</Text>
+        <Text style={styles.description}>
+          Use the camera to detect garbage in real-time and receive instant feedback on waste detection.
+        </Text>
+        <View style={styles.cameraContainer}>
+          <Camera 
+            style={styles.camera} 
+            type={Camera.Constants.Type.back} 
+            ref={ref => setCamera(ref)}
+          >
+            <View style={styles.cameraButtonContainer}>
+              <Button title={loading ? 'Detecting...' : 'Start Detection'} onPress={handleStartDetection} disabled={loading} />
+            </View>
+          </Camera>
+        </View>
+      </View>
 
-      {/* Real-Time Detection Section */}
-      <DetectionSection
-        label="Real-Time Garbage Detection"
-        description="Activate your camera to detect garbage in real-time. The model will identify and mark garbage objects."
-        onStartDetection={handleStartDetection}
-      />
-
-      {/* Image Upload and Classification Section */}
-      <ImageUploadSection
-        onSelectImage={handleSelectImage}
-        resultImage={resultImage}
-        resultText={resultText}
-      />
+      {/* Section 2: Upload Image for Garbage Detection */}
+      <View style={styles.section}>
+        <Text style={styles.title}>Upload Image for Garbage Detection</Text>
+        <Text style={styles.description}>
+          Upload an image to detect garbage and classify the content using the trained model.
+        </Text>
+        <TouchableOpacity style={styles.uploadButton} onPress={handleUploadImage}>
+          <Text style={styles.uploadText}>Choose Image</Text>
+        </TouchableOpacity>
+        {imageUri && <Image source={{ uri: imageUri }} style={styles.uploadedImage} />}
+      </View>
     </View>
   );
 };
@@ -88,62 +86,52 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
     padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    justifyContent: 'space-around',
   },
   section: {
-    width: '100%',
-    padding: 15,
-    marginBottom: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    marginBottom: 30,
   },
-  sectionTitle: {
-    fontSize: 18,
+  title: {
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 10,
   },
   description: {
-    fontSize: 14,
-    color: '#555',
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  button: {
-    backgroundColor: '#1E90FF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
     fontSize: 16,
+    color: 'gray',
+    marginBottom: 15,
   },
-  resultContainer: {
-    marginTop: 15,
+  cameraContainer: {
+    width: '100%',
+    height: 300,
+    borderRadius: 15,
+    overflow: 'hidden',
+  },
+  camera: {
+    flex: 1,
+  },
+  cameraButtonContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingBottom: 20,
+  },
+  uploadButton: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 5,
     alignItems: 'center',
   },
-  resultText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
+  uploadText: {
+    color: 'white',
+    fontSize: 18,
   },
-  resultImage: {
-    width: 200,
+  uploadedImage: {
+    marginTop: 20,
+    width: '100%',
     height: 200,
+    resizeMode: 'contain',
     borderRadius: 10,
   },
 });

@@ -19,7 +19,9 @@
     "react-native": "0.76.6",
     "react-native-safe-area-context": "^5.1.0",
     "react-native-screens": "^4.6.0",
-    "react-native-web": "~0.19.13"
+    "react-native-web": "~0.19.13",
+    "expo-camera": "~16.0.14",
+    "expo-image-picker": "~16.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
