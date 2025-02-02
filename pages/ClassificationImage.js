@@ -40,6 +40,8 @@ const ClassificationImage = () => {
     // Simulate a delay for processing
     setTimeout(() => {
       setResult("Organic Waste"); // Example result
+      // Replace the uploaded image with the result image (or processed image URI)
+      setImage(image); // You can replace `image` with a processed image URI if available
       setLoading(false);
     }, 2000);
   };
