@@ -5,7 +5,6 @@ import { SafeAreaView } from 'react-native';  // Safe area wrapper to prevent cl
 
 const Home = () => {
   const navigation = useNavigation();  // Hook for navigation
-
   return (
     <SafeAreaView style={styles.container}>
       {/* Scrollable Content */}
