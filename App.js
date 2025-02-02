@@ -5,6 +5,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from "./pages/SplashScreen";
 import Home from "./pages/Home";
 
+const Stack = createStackNavigator();
+
 export default function App() {
   return (
     <NavigationContainer>
