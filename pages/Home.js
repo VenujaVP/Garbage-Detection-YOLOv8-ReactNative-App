@@ -38,7 +38,7 @@ const Home = () => {
             </Text>
             <Button
               title="Upload Image for Garbage Detection"
-              onPress={() => navigation.navigate('UploadImage')}
+              onPress={() => navigation.navigate('ClassificationImage')}
               color="#00796B"
             />
           </View>
