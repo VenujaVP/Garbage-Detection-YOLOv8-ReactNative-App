@@ -1,6 +1,7 @@
 // expo install expo-camera expo-image-picker
 // expo install expo-camera expo-image-picker
 // npm install @react-navigation/native @react-navigation/stack react-native-screens react-native-safe-area-context
+// npm install expo-camera
 
 
 
