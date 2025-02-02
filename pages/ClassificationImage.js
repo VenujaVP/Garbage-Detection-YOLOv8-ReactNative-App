@@ -40,8 +40,6 @@ const ClassificationImage = () => {
     // Simulate a delay for processing
     setTimeout(() => {
       setResult("Organic Waste"); // Example result
-      // Replace the uploaded image with the result image (or processed image URI)
-      setImage(image); // You can replace `image` with a processed image URI if available
       setLoading(false);
     }, 2000);
   };
@@ -56,11 +54,6 @@ const ClassificationImage = () => {
           <Text style={styles.uploadText}>Upload Image</Text>
         )}
       </ScrollView>
-
-      {/* Middle Section: "DECTED" Bar */}
-      <View style={styles.dectedBar}>
-        <Text style={styles.dectedText}>DECTED</Text>
-      </View>
 
       {/* Detect Button */}
       <View style={styles.buttonContainer}>
@@ -107,16 +100,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 300,
     borderRadius: 8,
-  },
-  dectedBar: {
-    backgroundColor: "#00796B", // Dark teal color
-    padding: 10,
-    alignItems: "center",
-  },
-  dectedText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#ffffff", // White text
   },
   buttonContainer: {
     margin: 20,
