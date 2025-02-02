@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, Image, Alert, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  Image,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 const ClassificationImage = () => {
@@ -51,7 +60,9 @@ const ClassificationImage = () => {
         {image ? (
           <Image source={{ uri: image }} style={styles.imagePreview} />
         ) : (
-          <Text style={styles.uploadText}>Upload Image</Text>
+          <TouchableOpacity onPress={pickImage} style={styles.uploadArea}>
+            <Text style={styles.uploadText}>Upload Image</Text>
+          </TouchableOpacity>
         )}
       </ScrollView>
 
@@ -93,6 +104,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 3,
+  },
+  uploadArea: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: 300,
   },
   uploadText: {
     fontSize: 18,
