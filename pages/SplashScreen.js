@@ -17,8 +17,9 @@ const SplashScreen = () => {
   return (
     <View style={styles.container}>
       <Image 
-        source={{uri: 'https://your-logo-url.com/logo.png'}} // Replace with your logo URL or local file
+        source={{uri: '111.png'}}
         style={styles.logo}
+        alt="LOGO image"
       />
       <Text style={styles.text}>Welcome to Your App!</Text>
     </View>
