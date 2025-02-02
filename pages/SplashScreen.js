@@ -1,5 +1,3 @@
-//npm install @react-navigation/native @react-navigation/stack react-native-screens react-native-safe-area-context
-
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -33,7 +31,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff', // Background color of the splash screen
+    backgroundColor: '#E0F7FA', // Updated background color to match theme
   },
   logo: {
     width: 150,
@@ -43,7 +41,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#00796B', // Updated text color to match theme
   },
 });
 
