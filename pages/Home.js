@@ -42,7 +42,7 @@ const Home = () => {
 
       {/* Classification Section */}
       <DetectionSection
-        label="Real-Time Classification"
+        label="Garbage Classification"
         onStartDetection={handleStartClassification}
       />
     </View>
