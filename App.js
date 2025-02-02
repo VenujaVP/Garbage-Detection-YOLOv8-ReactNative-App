@@ -8,6 +8,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import RealTimeCamera from './pages/RealTimeCamera';
 import SplashScreen from "./pages/SplashScreen";
 import Home from "./pages/Home";
 
@@ -19,6 +20,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Splash">
         <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Home" component={Home} options={{ headerShown: false }}/>
+        <Stack.Screen name="RealTimeCamera" component={RealTimeCamera} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
