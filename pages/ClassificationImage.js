@@ -56,7 +56,7 @@ const ClassificationImage = () => {
     });
 
     try {
-      const response = await axios.post("http://<your-backend-ip>:5000/predict", formData, {
+      const response = await axios.post("http://192.168.43.73:5000/predict", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

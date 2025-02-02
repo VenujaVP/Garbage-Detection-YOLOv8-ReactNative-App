@@ -7,7 +7,7 @@ import io
 app = Flask(__name__)
 
 # Load the YOLOv8 model
-model = YOLO('model.pt')  # Ensure 'model.pt' is in the same directory
+model = YOLO('best.pt')  # Ensure 'model.pt' is in the same directory
 
 @app.route('/predict', methods=['POST'])
 def predict():
