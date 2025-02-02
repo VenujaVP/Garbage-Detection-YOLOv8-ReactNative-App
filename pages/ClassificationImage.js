@@ -1,6 +1,5 @@
-//ClassificationImage,js
 import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, Image, Alert } from "react-native";
+import { View, Text, Button, StyleSheet, Image, Alert, ScrollView } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 const ClassificationImage = () => {
@@ -47,36 +46,35 @@ const ClassificationImage = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Upload Image for Garbage Detection</Text>
-      <Text style={styles.introText}>
-        Upload an image to detect and classify garbage using our AI model.
-      </Text>
+      {/* Top Section: Image Area */}
+      <ScrollView contentContainerStyle={styles.imageArea}>
+        {image ? (
+          <Image source={{ uri: image }} style={styles.imagePreview} />
+        ) : (
+          <Text style={styles.uploadText}>Upload Image</Text>
+        )}
+      </ScrollView>
 
-      {/* Image Upload Section */}
-      <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>1. Upload Image</Text>
-        <Text style={styles.sectionDescription}>
-          Select an image from your gallery to upload.
-        </Text>
-        <Button title="Upload Image" onPress={pickImage} />
-        {image && <Image source={{ uri: image }} style={styles.imagePreview} />}
+      {/* Middle Section: "DECTED" Bar */}
+      <View style={styles.dectedBar}>
+        <Text style={styles.dectedText}>DECTED</Text>
       </View>
 
-      {/* Detection Section */}
-      <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>2. Detect Garbage</Text>
-        <Text style={styles.sectionDescription}>
-          Click the button below to detect garbage in the uploaded image.
-        </Text>
+      {/* Detect Button */}
+      <View style={styles.buttonContainer}>
         <Button
           title={loading ? "Processing..." : "Detect Garbage"}
           onPress={detectGarbage}
           disabled={loading}
         />
-        {result !== null && (
-          <Text style={styles.resultText}>Detection Result: {result}</Text>
-        )}
       </View>
+
+      {/* Result Section */}
+      {result !== null && (
+        <View style={styles.resultSection}>
+          <Text style={styles.resultText}>Detection Result: {result}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -85,57 +83,58 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#E0F7FA", // Light blue background
-    paddingTop: 50,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-    color: "#00796B", // Dark teal color
-  },
-  introText: {
-    fontSize: 18,
-    textAlign: "center",
-    marginBottom: 5,
-    paddingHorizontal: 5,
-    color: "#004D40", // Darker teal color
-  },
-  sectionContainer: {
-    width: "100%",
-    marginVertical: 10,
-    backgroundColor: "#ffffff",
+  imageArea: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ffffff", // White background for image area
+    margin: 10,
     borderRadius: 8,
-    padding: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 3,
   },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 10,
+  uploadText: {
+    fontSize: 18,
     color: "#00796B", // Dark teal color
-  },
-  sectionDescription: {
-    fontSize: 16,
-    marginBottom: 15,
-    color: "#004D40", // Darker teal color
   },
   imagePreview: {
     width: "100%",
-    height: 200,
-    marginTop: 10,
+    height: 300,
     borderRadius: 8,
+  },
+  dectedBar: {
+    backgroundColor: "#00796B", // Dark teal color
+    padding: 10,
+    alignItems: "center",
+  },
+  dectedText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#ffffff", // White text
+  },
+  buttonContainer: {
+    margin: 20,
+  },
+  resultSection: {
+    backgroundColor: "#ffffff",
+    borderRadius: 8,
+    padding: 15,
+    margin: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
   },
   resultText: {
     fontSize: 18,
     fontWeight: "bold",
-    marginTop: 10,
-    color: "#00796B", // Dark teal color
     textAlign: "center",
+    color: "#00796B", // Dark teal color
   },
 });
 
