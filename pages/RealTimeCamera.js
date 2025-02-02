@@ -33,8 +33,11 @@ const RealTimeCamera = ({ navigation }) => {
           <Text style={styles.description}>
             Use the camera to detect garbage in real-time.
           </Text>
-          <Button title="Open Camera" onPress={openCamera} />
-          <Button title="Go Back" onPress={() => navigation.goBack()} />
+          <View style={styles.buttonContainer}>
+            <Button title="Open Camera" onPress={openCamera} color="#4CAF50" />
+            <View style={styles.buttonSpacer} />
+            <Button title="Go Back" onPress={() => navigation.goBack()} color="#2196F3" />
+          </View>
         </>
       )}
     </View>
@@ -47,16 +50,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: '#E0F7FA', // Light blue background
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 20,
+    color: '#00796B', // Dark teal color
   },
   description: {
     fontSize: 18,
     textAlign: 'center',
     marginBottom: 30,
+    color: '#004D40', // Darker teal color
   },
   camera: {
     flex: 1,
@@ -72,13 +78,20 @@ const styles = StyleSheet.create({
   closeButton: {
     alignSelf: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'red',
+    backgroundColor: '#FF5252', // Red color for the close button
     padding: 10,
     borderRadius: 5,
   },
   closeButtonText: {
     fontSize: 16,
     color: 'white',
+  },
+  buttonContainer: {
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  buttonSpacer: {
+    height: 10,
   },
 });
 
