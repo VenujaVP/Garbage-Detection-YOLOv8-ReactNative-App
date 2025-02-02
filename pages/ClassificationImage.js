@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import axios from "axios";
+import { fromByteArray } from 'base64-js';
 
 const ClassificationImage = () => {
   const [image, setImage] = useState(null); // State for uploaded image
@@ -56,17 +56,24 @@ const ClassificationImage = () => {
     });
 
     try {
-      const response = await axios.post("http://192.168.43.73:5000/predict", formData, {
+      const response = await fetch("http://192.168.43.73:5000/predict", {
+        method: "POST",
+        body: formData,
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      const { detections, output_image } = response.data;
+      const data = await response.json();
+      const { detections, output_image } = data;
 
-      // Convert hex string back to image
-      const outputImageBytes = new Uint8Array(Buffer.from(output_image, "hex"));
-      const outputImageUri = `data:image/jpeg;base64,${Buffer.from(outputImageBytes).toString("base64")}`;
+      // Convert hex string to byte array
+      const hexString = output_image; // Hex string from the backend
+      const byteArray = new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+
+      // Convert byte array to base64
+      const base64String = fromByteArray(byteArray);
+      const outputImageUri = `data:image/jpeg;base64,${base64String}`;
 
       setResult({
         detections,
