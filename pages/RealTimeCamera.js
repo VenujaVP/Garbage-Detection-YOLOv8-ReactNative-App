@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Text, View, SafeAreaView } from "react-native";
 import { CameraView, Camera } from "expo-camera";
-import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 export default function RealTimeCamera() {
   const [cameraPermission, setCameraPermission] = useState(null); // State for camera permission
-  const navigation = useNavigation();
+  const [detections, setDetections] = useState([]); // State for detection results
+  const cameraRef = useRef(null); // Ref for the camera component
 
   // Request camera permissions when the component mounts
   useEffect(() => {
@@ -26,23 +27,53 @@ export default function RealTimeCamera() {
     );
   }
 
-  // Function to process video frames (you can add your detection logic here)
-  const handleFrame = ({ nativeEvent }) => {
+  // Function to process video frames
+  const handleFrame = async ({ nativeEvent }) => {
     const frame = nativeEvent; // This contains the video frame data
-    console.log("Frame data:", frame);
-    // Add your garbage detection logic here
+
+    try {
+      // Convert the frame to a base64 image
+      const base64Image = `data:image/jpeg;base64,${frame.base64}`;
+
+      // Send the frame to the backend for processing
+      const response = await axios.post("http://192.168.43.73:5000/predict", {
+        image: base64Image,
+      });
+
+      // Update the detections state with the results
+      setDetections(response.data.detections);
+    } catch (error) {
+      console.error("Error processing frame:", error);
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <CameraView
+        ref={cameraRef}
         style={styles.camera}
         onCameraReady={() => console.log("Camera is ready")}
         onFrameAvailable={handleFrame} // Process video frames in real-time
       >
-        <View style={styles.overlay}>
-          <Text style={styles.overlayText}>Real-Time Garbage Detection</Text>
-        </View>
+        {/* Overlay detection results on the camera feed */}
+        {detections.map((detection, index) => (
+          <View
+            key={index}
+            style={{
+              position: "absolute",
+              borderWidth: 2,
+              borderColor: "red",
+              left: detection.bbox[0],
+              top: detection.bbox[1],
+              width: detection.bbox[2] - detection.bbox[0],
+              height: detection.bbox[3] - detection.bbox[1],
+            }}
+          >
+            <Text style={{ color: "white", backgroundColor: "red" }}>
+              {detection.class} ({detection.confidence.toFixed(2)})
+            </Text>
+          </View>
+        ))}
       </CameraView>
     </SafeAreaView>
   );
@@ -55,19 +86,5 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
-  },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    padding: 20,
-    alignItems: "center",
-  },
-  overlayText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
   },
 });
