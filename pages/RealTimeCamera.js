@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
 import { CameraView, Camera } from "expo-camera";
 import axios from "axios";
 
 export default function RealTimeCamera() {
   const [cameraPermission, setCameraPermission] = useState(null); // State for camera permission
   const [detections, setDetections] = useState([]); // State for detection results
+  const [outputImage, setOutputImage] = useState(null); // State for annotated image
   const cameraRef = useRef(null); // Ref for the camera component
 
   // Request camera permissions when the component mounts
@@ -40,8 +41,9 @@ export default function RealTimeCamera() {
         image: base64Image,
       });
 
-      // Update the detections state with the results
+      // Update the detections and output image state with the results
       setDetections(response.data.detections);
+      setOutputImage(`data:image/jpeg;base64,${response.data.output_image}`);
     } catch (error) {
       console.error("Error processing frame:", error);
     }
@@ -55,6 +57,11 @@ export default function RealTimeCamera() {
         onCameraReady={() => console.log("Camera is ready")}
         onFrameAvailable={handleFrame} // Process video frames in real-time
       >
+        {/* Display the annotated image from the backend */}
+        {outputImage && (
+          <Image source={{ uri: outputImage }} style={styles.outputImage} />
+        )}
+
         {/* Overlay detection results on the camera feed */}
         {detections.map((detection, index) => (
           <View
@@ -86,5 +93,12 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
+  },
+  outputImage: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
